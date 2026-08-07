@@ -115,7 +115,11 @@
   .cal td .d.m4 { background:#9be89b; color:#1e6b1e; }
   .cal td .d.m5 { background:#2ecc71; color:#fff; }
   .cal td .d.today { background:#ff9f43 !important; color:#fff !important;
-                     box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff9f43; }
+                     animation: pulseToday 2s ease-in-out infinite; }
+  @keyframes pulseToday {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,159,67,.6), 0 0 0 3px #ff9f43; }
+    50%      { box-shadow: 0 0 0 9px rgba(255,159,67,0), 0 0 0 3px #ff9f43; }
+  }
   .cal td .d.blank { background:transparent; }
   .cal td .d .w { font-size: 9px; line-height: 1; margin-top: 1px; opacity: .85; }
 
