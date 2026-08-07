@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08 01:30 Bangkok",
+  "generated_at": "2026-08-08 01:49 Bangkok",
   "joy": {
     "mood_today": 2,
     "mood_note": "ฉันเหนื่อยมากเลย",
@@ -62,7 +62,7 @@
   "papapig": {
     "persona": "papapig",
     "energy": 85,
-    "hunger": 33,
+    "hunger": 35,
     "sleep": 60,
     "xp": 125,
     "level": 2,
@@ -337,7 +337,7 @@
     "2026-08-21": {
       "tmax": 31.4,
       "tmin": 25.9,
-      "pop": 71
+      "pop": 72
     }
   }
 }
