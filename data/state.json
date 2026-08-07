@@ -1,9 +1,16 @@
 {
   "generated_at": "2026-08-07 21:42 Bangkok",
   "joy": {
-    "mood_today": null,
-    "mood_note": "",
-    "moods": [],
+    "mood_today": 2,
+    "mood_note": "ฉันเหนื่อยมากเลย — เหนื่อยจากงาน (très fatiguée après le travail)",
+    "moods": [
+      {
+        "date": "2026-08-07",
+        "mood": 2,
+        "note": "ฉันเหนื่อยมากเลย — เหนื่อยจากงาน (très fatiguée après le travail)",
+        "axe": "นอนเร็วขึ้น (dormir plus tôt)"
+      }
+    ],
     "meals": [
       {
         "emoji": "🍽️",
@@ -49,7 +56,7 @@
       }
     ],
     "energy": 70,
-    "goal": "",
+    "goal": "นอนเร็วขึ้น (dormir plus tôt)",
     "streak": 0
   },
   "papapig": {
