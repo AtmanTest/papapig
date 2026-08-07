@@ -127,6 +127,30 @@
             justify-content:center; font-size:13px; font-weight:700; }
   .xpbar { height:8px; border-radius:999px; background:#ffe3ec; overflow:hidden; margin-top:6px; }
   .xpbar > div { height:100%; background:linear-gradient(90deg,#f9d423,#ff6b9d); }
+
+  /* Modal jour */
+  #modal { position:fixed; inset:0; background:rgba(45,42,50,.55);
+           display:none; align-items:flex-end; justify-content:center; z-index:99; }
+  #modal.open { display:flex; }
+  #modal .sheet {
+    background: var(--cream); width:100%; max-width:640px; max-height: 82vh; overflow-y:auto;
+    border-radius: 24px 24px 0 0; padding: 24px 20px 40px;
+    animation: up .25s ease;
+  }
+  @keyframes up { from { transform: translateY(60px); opacity:0 } to { transform:none; opacity:1 } }
+  #modal .handle { width:44px; height:5px; border-radius:99px; background:#e0ccd6;
+                   margin:0 auto 14px; }
+  #modal h2 { font-size:18px; margin-bottom:14px; text-align:center; }
+  #modal .mrow { display:flex; align-items:center; gap:12px; background:#fff;
+                 border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:10px; }
+  #modal .mrow .ico { font-size:26px; }
+  #modal .mrow .lb { font-size:11px; color:#b06a86; font-weight:800; letter-spacing:.8px;
+                     text-transform:uppercase; }
+  #modal .mrow .vl { font-size:15px; font-weight:700; margin-top:2px; }
+  #modal .close { width:100%; padding:14px; border:none; border-radius:999px;
+                  background:var(--pink); color:#fff; font-weight:800; font-size:15px;
+                  margin-top:8px; cursor:pointer; min-height:44px; }
+  .wico { font-size:20px; }
 </style>
 </head>
 <body>
@@ -240,6 +264,16 @@
 </main>
 </div>
 
+<!-- Modal jour -->
+<div id="modal">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h2 id="m-title">—</h2>
+    <div id="m-body"></div>
+    <button class="close" onclick="closeModal()" data-i18n="close">ปิด</button>
+  </div>
+</div>
+
 <script>
 /* ═════════ i18n : thaï par défaut + anglais ═════════ */
 const TR = {
@@ -255,7 +289,7 @@ const TR = {
     lock: "🔐 ข้อความทั้งหมดถูกเข้ารหัส (AES-256)",
     footer: "Papapig Intelligence System · ใช้ LM Studio ในเครื่อง · ไม่มีการแชร์ข้อมูลส่วนตัว",
     no_data: "ยังไม่มีข้อมูล — เริ่มบันทึกคืนนี้ 📔", no_meal: "ยังไม่มีข้อมูลมื้ออาหาร",
-    logout: "ออกจากระบบ",
+    logout: "ออกจากระบบ", close: "ปิด",
   },
   en: {
     login_title: "Papapig 🐷", login_sub: "Enter password", login_btn: "Enter",
@@ -269,7 +303,7 @@ const TR = {
     lock: "🔐 All conversations are encrypted (AES-256)",
     footer: "Papapig Intelligence System · Local LM Studio · no private data shared",
     no_data: "no data yet — journal starts tonight 📔", no_meal: "no meal data yet",
-    logout: "Log out",
+    logout: "Log out", close: "Close",
   }
 };
 let LANG = "th";
@@ -413,7 +447,7 @@ function render(s) {
   });
 }
 
-/* ═════════ Calendrier mensuel ═════════ */
+/* ═════════ Calendrier mensuel + modal jour ═════════ */
 function renderCal(moods) {
   const byDate = {};
   moods.forEach(m => byDate[m.date] = m.mood);
@@ -431,14 +465,58 @@ function renderCal(moods) {
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = `${y}-${pad(mo + 1)}-${pad(d)}`;
     const mood = byDate[ds];
+    const hasData = mood || (S.weather || {})[ds];
     const cls = mood ? "m" + mood : "blank";
     const isToday = ds === todayStr ? " today" : "";
-    html += "<td><div class='d " + cls + isToday + "'>" + d + "</div></td>";
+    const click = hasData ? ` onclick='openDay("${ds}")'` : "";
+    html += "<td><div class='d " + cls + isToday + "'" + click + ">" + d + "</div></td>";
     if ((startDow + d) % 7 === 0) html += "</tr><tr>";
   }
   html += "</tr>";
   document.getElementById("j-cal").innerHTML = html;
 }
+
+function openDay(ds) {
+  const m = (S.joy.moods || []).find(x => x.date === ds);
+  const w = (S.weather || {})[ds];
+  const mealsDay = (S.joy.meals || []).filter(x => x.date === ds);
+  document.getElementById("m-title").textContent = ds.slice(5);
+  let body = "";
+
+  /* Mood */
+  if (m && m.mood) {
+    const em = ["😭","😟","😐","🙂","😍"][m.mood - 1];
+    body += "<div class='mrow'><div class='ico'>" + em + "</div><div><div class='lb'>" +
+      (LANG === "th" ? "อารมณ์" : "MOOD") + "</div><div class='vl'>" + MOODS[LANG][m.mood] +
+      (m.note ? "<br><span style='font-size:12px;color:#8a8590;font-weight:400'>" + m.note + "</span>" : "") +
+      "</div></div></div>";
+  }
+  /* Repas */
+  if (mealsDay.length) {
+    body += "<div class='mrow'><div class='ico'>🍜</div><div><div class='lb'>" +
+      (LANG === "th" ? "กิน" : "MEALS") + "</div><div class='vl'>" +
+      mealsDay.map(x => x.emoji + " " + (x.word || "") + " <span style='font-size:11px;color:#8a8590'>" + x.at + "</span>").join(" · ") +
+      "</div></div></div>";
+  }
+  /* Météo */
+  if (w && w.tmax !== undefined && w.tmax !== null) {
+    const rain = w.pop >= 40 ? "🌧️ " + (LANG === "th" ? "ฝน" : "rain") : (w.pop >= 15 ? "⛅" : "☀️");
+    body += "<div class='mrow'><div class='ico'><span class='wico'>" + rain + "</span></div><div><div class='lb'>" +
+      (LANG === "th" ? "สภาพอากาศกรุงเทพ" : "BANGKOK WEATHER") + "</div><div class='vl'>" +
+      w.tmax + "° / " + w.tmin + "° <span style='font-size:12px;color:#8a8590'>· ☔ " + w.pop + "%</span>" +
+      "</div></div></div>";
+  }
+  /* Aucune donnée */
+  if (!body) body = "<div class='mrow'><div class='ico'>🕳️</div><div><div class='vl'>" +
+    (LANG === "th" ? "ไม่มีข้อมูลวันนี้" : "no data for this day") + "</div></div></div>";
+
+  document.getElementById("m-body").innerHTML = body;
+  document.getElementById("modal").classList.add("open");
+}
+function closeModal() { document.getElementById("modal").classList.remove("open"); }
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target.id === "modal") closeModal();
+});
 </script>
 </body>
 </html>
