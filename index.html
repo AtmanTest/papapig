@@ -49,17 +49,27 @@
   .banner { position:relative; width:100%; height:170px; overflow:hidden; }
   .banner img { width:100%; height:100%; object-fit:cover; object-position:72% 25%; display:block; }
   @media (min-width: 600px) { .banner { height: 230px; } }
-  header .top { display:flex; justify-content:space-between; align-items:center; max-width:640px; margin:0 auto; padding-top:14px; }
-  header .logo { font-size: 30px; }
-  header h1 { font-size: 18px; font-weight: 800; letter-spacing:.4px; }
+  .banner .top {
+    position:absolute; top:10px; left:12px; right:12px;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+  }
+  header .logo { font-size: 30px; text-shadow: 0 1px 6px rgba(45,42,50,.4); }
+  .banner h1 {
+    font-size: 17px; font-weight: 800; letter-spacing:.4px; padding: 6px 14px;
+    background: rgba(255,255,255,.20); border-radius:999px;
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    text-shadow: 0 1px 4px rgba(45,42,50,.35); white-space:nowrap;
+  }
   header .actions { display:flex; gap:8px; align-items:center; }
   .btn {
-    border:none; background: rgba(255,255,255,.25); color:#fff; font-weight:700;
+    border: 1px solid rgba(255,255,255,.4); background: rgba(255,255,255,.22); color:#fff; font-weight:700;
     padding: 10px 16px; border-radius: 999px; cursor:pointer; font-size: 14px;
     min-height: 44px; min-width: 44px;
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    text-shadow: 0 1px 3px rgba(45,42,50,.3);
   }
-  .btn:hover { background: rgba(255,255,255,.4); }
-  .tabs { display:flex; max-width:640px; margin:14px auto 0; gap:6px; padding: 0 16px; }
+  .btn:hover { background: rgba(255,255,255,.38); }
+  .tabs { display:flex; max-width:640px; margin:0 auto; gap:6px; padding: 12px 16px 0; }
   .tab {
     flex:1; padding: 14px 8px; border-radius: 16px 16px 0 0; border:none; cursor:pointer;
     font-size: 14px; font-weight: 700; background: rgba(255,255,255,.18); color:#fff;
@@ -87,17 +97,21 @@
   .cal th { font-size: 10px; color:#b06a86; padding-bottom: 4px; }
   .cal td { text-align:center; font-size: 13px; font-weight: 700; }
   .cal td .d {
-    display:flex; align-items:center; justify-content:center; height: 44px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; height: 46px;
     border-radius: 10px; background: #faf0f4; color:#b9a3ad; cursor: default;
-    touch-action: manipulation;
+    touch-action: manipulation; line-height: 1.1;
   }
+  .cal td .d.clickable { background: #ffe9c9; color:#a86a2b; cursor:pointer; }
+  .cal td .d.clickable:active { transform: scale(.93); }
   .cal td .d.m1 { background:#ff5d6c; color:#fff; }
   .cal td .d.m2 { background:#ffa05c; color:#fff; }
   .cal td .d.m3 { background:#f7d154; color:#7a6420; }
   .cal td .d.m4 { background:#9be89b; color:#1e6b1e; }
   .cal td .d.m5 { background:#2ecc71; color:#fff; }
-  .cal td .d.today { outline: 2px solid var(--pink); outline-offset: 1px; }
+  .cal td .d.today { background:#ff9f43 !important; color:#fff !important;
+                     box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff9f43; }
   .cal td .d.blank { background:transparent; }
+  .cal td .d .w { font-size: 9px; line-height: 1; margin-top: 1px; opacity: .85; }
 
   .list { list-style:none; }
   .list li { padding: 8px 0; border-bottom: 1px solid #f6e3ea; font-size: 14px;
@@ -173,13 +187,15 @@
 <!-- ═══ APP ═══ -->
 <div id="app" class="hidden">
 <header>
-  <div class="banner"><img src="images/peppa-header.jpg" alt="Peppa Pig"></div>
-  <div class="top">
-    <span class="logo">🐷</span>
-    <h1 data-i18n="app_title">Papapig — ระบบใจ</h1>
-    <div class="actions">
-      <button class="btn" id="lang-btn">EN</button>
-      <button class="btn" id="logout-btn">⎋</button>
+  <div class="banner">
+    <img src="images/peppa-header.jpg" alt="Peppa Pig">
+    <div class="top">
+      <span class="logo">🐷</span>
+      <h1 data-i18n="app_title">Papapig — ระบบใจ</h1>
+      <div class="actions">
+        <button class="btn" id="lang-btn">EN</button>
+        <button class="btn" id="logout-btn">⎋</button>
+      </div>
     </div>
   </div>
   <div class="tabs">
@@ -469,11 +485,18 @@ function renderCal(moods) {
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = `${y}-${pad(mo + 1)}-${pad(d)}`;
     const mood = byDate[ds];
-    const hasData = mood || (S.weather || {})[ds];
-    const cls = mood ? "m" + mood : "blank";
-    const isToday = ds === todayStr ? " today" : "";
+    const w = (S.weather || {})[ds];
+    const hasWeather = w && w.tmax !== undefined && w.tmax !== null;
+    const hasData = mood || hasWeather;
+    let cls = mood ? "m" + mood : (hasWeather ? "clickable" : "blank");
+    if (ds === todayStr) cls += " today";
     const click = hasData ? ` onclick='openDay("${ds}")'` : "";
-    html += "<td><div class='d " + cls + isToday + "'" + click + ">" + d + "</div></td>";
+    let wico = "";
+    if (hasWeather && !mood) {
+      const rain = w.pop >= 40 ? "🌧️" : (w.pop >= 15 ? "⛅" : "☀️");
+      wico = "<span class='w'>" + rain + "</span>";
+    }
+    html += "<td><div class='d " + cls + "'" + click + ">" + d + wico + "</div></td>";
     if ((startDow + d) % 7 === 0) html += "</tr><tr>";
   }
   html += "</tr>";
