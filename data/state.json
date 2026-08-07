@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08 03:38 Bangkok",
+  "generated_at": "2026-08-08 03:39 Bangkok",
   "joy": {
     "mood_today": 2,
     "mood_note": "ฉันเหนื่อยมากเลย",
@@ -13,22 +13,10 @@
     ],
     "meals": [
       {
-        "emoji": "🍽️",
-        "at": "23:14",
-        "date": "2026-08-07",
-        "word": "เคลอรี่"
-      },
-      {
         "emoji": "☕",
         "at": "23:13",
         "date": "2026-08-07",
         "word": "มอคค่า"
-      },
-      {
-        "emoji": "🍽️",
-        "at": "23:12",
-        "date": "2026-08-07",
-        "word": "แคลอรี่"
       },
       {
         "emoji": "🍽️",
@@ -37,22 +25,10 @@
         "word": "ข้าว"
       },
       {
-        "emoji": "🍽️",
-        "at": "01:33",
-        "date": "2026-08-05",
-        "word": "ร้าน"
-      },
-      {
         "emoji": "🍵",
         "at": "01:21",
         "date": "2026-08-05",
         "word": "ชา"
-      },
-      {
-        "emoji": "🍽️",
-        "at": "01:20",
-        "date": "2026-08-05",
-        "word": "หวาน"
       }
     ],
     "energy": 70,
@@ -69,8 +45,8 @@
     "valence": 0.3,
     "activation": 0.5,
     "emotion": "joie",
-    "last_meal_emoji": "🍽️",
-    "last_meal_at": "23:14",
+    "last_meal_emoji": "☕",
+    "last_meal_at": "23:13",
     "crons": [
       {
         "name": "papapig-news",
@@ -107,7 +83,7 @@
     ],
     "activity": [
       {
-        "t": "🏠 rentrée maison",
+        "t": "🏠 กลับถึงบ้าน",
         "d": "08-06 22:10"
       }
     ]
@@ -168,6 +144,10 @@
     "2026-07-30": {
       "th": "วันเข้าพรรษา",
       "en": "Khao Phansa (Buddhist Lent)"
+    },
+    "2026-08-07": {
+      "th": "🎂 วันเกิด Papapig AI",
+      "en": "🎂 Papapig AI's Birthday"
     },
     "2026-08-12": {
       "th": "วันแม่",
