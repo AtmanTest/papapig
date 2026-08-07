@@ -101,6 +101,7 @@
   /* Calendrier */
   .cal { width:100%; border-collapse: separate; border-spacing: 4px; }
   .cal th { font-size: 10px; color:#b06a86; padding-bottom: 4px; }
+  .cal-head { text-align:center; font-weight:800; font-size:14px; color:#c44a74; margin-bottom:8px; }
   .cal td { text-align:center; font-size: 13px; font-weight: 700; }
   .cal td .d {
     display:flex; flex-direction:column; align-items:center; justify-content:center; height: 46px;
@@ -115,11 +116,13 @@
   .cal td .d.m4 { background:#9be89b; color:#1e6b1e; }
   .cal td .d.m5 { background:#2ecc71; color:#fff; }
   .cal td .d.today { background:#ff9f43 !important; color:#fff !important;
-                     animation: pulseToday 2s ease-in-out infinite; }
-  @keyframes pulseToday {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,159,67,.6), 0 0 0 3px #ff9f43; }
-    50%      { box-shadow: 0 0 0 9px rgba(255,159,67,0), 0 0 0 3px #ff9f43; }
+                     animation: pulseRing 2s ease-in-out infinite; }
+  @keyframes pulseRing {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(255,255,255,.95); }
+    50%      { box-shadow: 0 0 0 5px rgba(255,255,255,0); }
   }
+  .cal td .d .hol { width:5px; height:5px; border-radius:50%; background:#ff4d88;
+                    display:inline-block; margin-top:2px; box-shadow: 0 0 4px rgba(255,77,136,.7); }
   .cal td .d.blank { background:transparent; }
   .cal td .d .w { font-size: 9px; line-height: 1; margin-top: 1px; opacity: .85; }
 
@@ -311,7 +314,7 @@ const TR = {
   th: {
     login_title: "Papapig 🐷", login_sub: "ป้อนรหัสผ่านเพื่อเข้า", login_btn: "เข้า",
     app_title: "Papapig AI — ความฉลาดที่แท้จริง", tab_joy: "👧 ชีวิตจอย", tab_papapig: "🐷 ชีวิตพ่อหมู",
-    joy_mood_today: "😊 อารมณ์วันนี้", joy_energy: "⚡ พลังงาน", joy_cal: "📅 ปฏิทินอารมณ์",
+    joy_mood_today: "😊 อารมณ์วันนี้", joy_energy: "⚡ พลังงาน", joy_cal: "📅 ปฏิทิน — อารมณ์ · อากาศ · อาหาร",
     joy_meals: "🍜 กินอะไรมาบ้าง", joy_goal: "🎯 เป้าหมาย",
     p_energy: "⚡ พลังงาน", p_hunger: "🍗 ความหิว", p_sleep: "😴 การนอน",
     p_persona: "🎭 บุคลิก", p_persona_sub: "พ่อหมู — ค่าเริ่มต้น",
@@ -325,7 +328,7 @@ const TR = {
   en: {
     login_title: "Papapig 🐷", login_sub: "Enter password", login_btn: "Enter",
     app_title: "Papapig AI with Real Intelligence", tab_joy: "👧 Joy's Life", tab_papapig: "🐷 Papapig's Life",
-    joy_mood_today: "😊 Today's Mood", joy_energy: "⚡ Energy", joy_cal: "📅 Mood Calendar",
+    joy_mood_today: "😊 Today's Mood", joy_energy: "⚡ Energy", joy_cal: "📅 Calendar — Mood · Weather · Food",
     joy_meals: "🍜 Detected Meals", joy_goal: "🎯 Goal",
     p_energy: "⚡ Energy", p_hunger: "🍗 Hunger", p_sleep: "😴 Sleep",
     p_persona: "🎭 Persona", p_persona_sub: "Papa Pig — default",
@@ -491,7 +494,14 @@ function renderCal(moods) {
   const todayStr = `${y}-${pad(mo + 1)}-${pad(now.getDate())}`;
 
   const labels = LANG === "th" ? ["จ","อ","พ","พฤ","ศ","ส","อา"] : ["M","T","W","T","F","S","S"];
-  let html = "<tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr><tr>";
+  const months = LANG === "th"
+    ? ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+       "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+    : ["January","February","March","April","May","June",
+       "July","August","September","October","November","December"];
+  const hol = d => (S.holidays || {})[d] || null;
+  let html = "<div class='cal-head'>" + months[mo] + " " + y + "</div>" +
+             "<table class='cal'><tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr><tr>";
   for (let i = 0; i < startDow; i++) html += "<td><div class='d blank'></div></td>";
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = `${y}-${pad(mo + 1)}-${pad(d)}`;
@@ -501,16 +511,17 @@ function renderCal(moods) {
     const hasData = mood || hasWeather;
     let cls = mood ? "m" + mood : (hasWeather ? "clickable" : "blank");
     if (ds === todayStr) cls += " today";
-    const click = hasData ? ` onclick='openDay("${ds}")'` : "";
+    const click = hasData || hol(ds) ? ` onclick='openDay("${ds}")'` : "";
     let wico = "";
     if (hasWeather && !mood) {
       const rain = w.pop >= 40 ? "🌧️" : (w.pop >= 15 ? "⛅" : "☀️");
       wico = "<span class='w'>" + rain + "</span>";
     }
-    html += "<td><div class='d " + cls + "'" + click + ">" + d + wico + "</div></td>";
+    const holDot = hol(ds) ? "<span class='hol'></span>" : "";
+    html += "<td><div class='d " + cls + "'" + click + ">" + d + wico + holDot + "</div></td>";
     if ((startDow + d) % 7 === 0) html += "</tr><tr>";
   }
-  html += "</tr>";
+  html += "</tr></table>";
   document.getElementById("j-cal").innerHTML = html;
 }
 
@@ -542,6 +553,13 @@ function openDay(ds) {
     body += "<div class='mrow'><div class='ico'><span class='wico'>" + rain + "</span></div><div><div class='lb'>" +
       (LANG === "th" ? "สภาพอากาศกรุงเทพ" : "BANGKOK WEATHER") + "</div><div class='vl'>" +
       w.tmax + "° / " + w.tmin + "° <span style='font-size:12px;color:#8a8590'>· ☔ " + w.pop + "%</span>" +
+      "</div></div></div>";
+  }
+  /* Fête thaïlandaise */
+  const hol = (S.holidays || {})[ds];
+  if (hol) {
+    body += "<div class='mrow'><div class='ico'>🎉</div><div><div class='lb'>" +
+      (LANG === "th" ? "วันสำคัญ" : "THAI HOLIDAY") + "</div><div class='vl'>" + hol[LANG] +
       "</div></div></div>";
   }
   /* Aucune donnée */
