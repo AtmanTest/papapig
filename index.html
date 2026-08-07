@@ -49,14 +49,7 @@
   .banner { position:relative; width:100%; height:170px; overflow:hidden; }
   .banner img { width:100%; height:100%; object-fit:cover; object-position:72% 25%; display:block; }
   @media (min-width: 600px) { .banner { height: 230px; } }
-  .banner .top {
-    position:absolute; top:10px; left:10px; right:10px;
-    display:flex; justify-content:space-between; align-items:center; gap:8px;
-    background: rgba(255,107,157,.30);
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    border-radius:16px; padding:8px 14px;
-    box-shadow: 0 2px 12px rgba(45,42,50,.12);
-  }
+  header .top { display:flex; justify-content:space-between; align-items:center; max-width:640px; margin:0 auto; padding-top:14px; }
   header .logo { font-size: 30px; }
   header h1 { font-size: 18px; font-weight: 800; letter-spacing:.4px; }
   header .actions { display:flex; gap:8px; align-items:center; }
@@ -180,15 +173,13 @@
 <!-- ═══ APP ═══ -->
 <div id="app" class="hidden">
 <header>
-  <div class="banner">
-    <img src="images/peppa-header.jpg" alt="Peppa Pig">
-    <div class="top">
-      <span class="logo">🐷</span>
-      <h1 data-i18n="app_title">Papapig — ระบบใจ</h1>
-      <div class="actions">
-        <button class="btn" id="lang-btn">EN</button>
-        <button class="btn" id="logout-btn">⎋</button>
-      </div>
+  <div class="banner"><img src="images/peppa-header.jpg" alt="Peppa Pig"></div>
+  <div class="top">
+    <span class="logo">🐷</span>
+    <h1 data-i18n="app_title">Papapig — ระบบใจ</h1>
+    <div class="actions">
+      <button class="btn" id="lang-btn">EN</button>
+      <button class="btn" id="logout-btn">⎋</button>
     </div>
   </div>
   <div class="tabs">
