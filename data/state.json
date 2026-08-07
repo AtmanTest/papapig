@@ -1,10 +1,46 @@
 {
-  "generated_at": "2026-08-07 21:30 Bangkok",
+  "generated_at": "2026-08-07 21:34 Bangkok",
   "joy": {
     "mood_today": null,
     "mood_note": "",
     "moods": [],
-    "meals": [],
+    "meals": [
+      {
+        "emoji": "🍽️",
+        "at": "23:13",
+        "date": "2026-08-07"
+      },
+      {
+        "emoji": "🍽️",
+        "at": "23:12",
+        "date": "2026-08-07"
+      },
+      {
+        "emoji": "🍽️",
+        "at": "22:11",
+        "date": "2026-08-06"
+      },
+      {
+        "emoji": "🍽️",
+        "at": "02:08",
+        "date": "2026-08-06"
+      },
+      {
+        "emoji": "🍽️",
+        "at": "01:33",
+        "date": "2026-08-05"
+      },
+      {
+        "emoji": "🍽️",
+        "at": "01:21",
+        "date": "2026-08-05"
+      },
+      {
+        "emoji": "🍽️",
+        "at": "01:20",
+        "date": "2026-08-05"
+      }
+    ],
     "energy": 70,
     "goal": "",
     "streak": 0
@@ -12,15 +48,15 @@
   "papapig": {
     "persona": "papapig",
     "energy": 85,
-    "hunger": 40,
+    "hunger": 10,
     "sleep": 60,
-    "xp": 120,
+    "xp": 125,
     "level": 2,
     "valence": 0.3,
     "activation": 0.5,
     "emotion": "joie",
-    "last_meal_emoji": null,
-    "last_meal_at": null,
+    "last_meal_emoji": "🍽️",
+    "last_meal_at": "23:13",
     "crons": [
       {
         "name": "papapig-news",
@@ -55,6 +91,11 @@
         "status": "active"
       }
     ],
-    "activity": []
+    "activity": [
+      {
+        "t": "🏠 rentrée maison",
+        "d": "08-06 22:10"
+      }
+    ]
   }
 }
