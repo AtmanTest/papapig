@@ -2,214 +2,440 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Papapig 🐷 — ระบบหัวใจพ่อหมู</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ff6b9d">
+<title>Papapig 🐷</title>
 <style>
   :root {
     --pink: #ff6b9d; --teal: #2ec4b6; --cream: #fff8f0; --dark: #2d2a32;
-    --card: #ffffff; --soft: #fdf0f4;
+    --card: #ffffff; --soft: #fdf0f4; --line: #ffe3ec;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: -apple-system, "SF Pro Thai", "Noto Sans Thai", sans-serif;
-    background: var(--cream); color: var(--dark); padding-bottom: 60px;
+    background: var(--cream); color: var(--dark); min-height: 100vh;
+    padding-top: env(safe-area-inset-top);
   }
+  .hidden { display:none !important; }
+
+  /* ── LOGIN ── */
+  #login {
+    min-height: 100vh; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap: 20px;
+    background: linear-gradient(135deg, var(--pink), var(--teal));
+    padding: 30px;
+  }
+  #login .pig { font-size: 84px; animation: bounce 2.2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  #login h1 { color:#fff; font-size: 26px; font-weight: 800; }
+  #login p { color: rgba(255,255,255,.9); font-size: 13px; text-align:center; }
+  #login form { display:flex; flex-direction:column; gap:12px; width: 100%; max-width: 300px; }
+  #login input {
+    padding: 14px 18px; border-radius: 999px; border: none; font-size: 16px;
+    text-align:center; outline:none; background: #fff;
+  }
+  #login button {
+    padding: 14px; border-radius: 999px; border: none; font-size: 16px;
+    font-weight: 800; background: var(--dark); color: #fff; cursor: pointer;
+  }
+  #login .err { color:#ffe066; font-size:12px; text-align:center; min-height:16px; }
+
+  /* ── APP ── */
   header {
     background: linear-gradient(135deg, var(--pink), var(--teal));
-    color: #fff; padding: 28px 20px 24px; text-align: center;
-    border-radius: 0 0 32px 32px; box-shadow: 0 6px 24px rgba(255,107,157,.35);
+    color:#fff; padding: 20px 16px 0; text-align:center;
   }
-  header .pig { font-size: 52px; display:block; margin-bottom: 4px; }
-  header h1 { font-size: 22px; font-weight: 800; letter-spacing: .5px; }
-  header p { font-size: 13px; opacity: .92; margin-top: 4px; }
-  .badge {
-    display:inline-block; background:rgba(255,255,255,.22); padding:4px 14px;
-    border-radius: 999px; font-size: 12px; margin-top: 10px; font-weight: 600;
+  header .top { display:flex; justify-content:space-between; align-items:center; max-width:640px; margin:0 auto; }
+  header .logo { font-size: 30px; }
+  header h1 { font-size: 18px; font-weight: 800; letter-spacing:.4px; }
+  header .actions { display:flex; gap:8px; align-items:center; }
+  .btn {
+    border:none; background: rgba(255,255,255,.25); color:#fff; font-weight:700;
+    padding: 10px 16px; border-radius: 999px; cursor:pointer; font-size: 14px;
+    min-height: 44px; min-width: 44px;
   }
-  .dot { display:inline-block; width:8px; height:8px; border-radius:50%;
-         background:#7CFC00; margin-right:6px; animation: pulse 1.6s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
-  main { max-width: 640px; margin: 0 auto; padding: 20px 16px; }
-  .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn:hover { background: rgba(255,255,255,.4); }
+  .tabs { display:flex; max-width:640px; margin:14px auto 0; gap:6px; padding: 0 16px; }
+  .tab {
+    flex:1; padding: 14px 8px; border-radius: 16px 16px 0 0; border:none; cursor:pointer;
+    font-size: 14px; font-weight: 700; background: rgba(255,255,255,.18); color:#fff;
+    min-height: 48px; touch-action: manipulation;
+  }
+  .tab.active { background: var(--cream); color: var(--dark); }
+  main { max-width: 640px; margin: 0 auto; padding: 18px 14px 60px; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
   @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
   .card {
     background: var(--card); border-radius: 18px; padding: 16px;
-    box-shadow: 0 2px 10px rgba(45,42,50,.06); border: 1px solid #ffe3ec;
+    box-shadow: 0 2px 10px rgba(45,42,50,.06); border: 1px solid var(--line);
   }
-  .card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px;
-             color: #b06a86; margin-bottom: 8px; font-weight: 700; }
-  .card .big { font-size: 34px; font-weight: 800; line-height: 1.1; }
-  .card .sub { font-size: 12px; color: #8a8590; margin-top: 4px; }
+  .card h3 { font-size: 12px; text-transform: uppercase; letter-spacing:1.2px;
+             color:#b06a86; margin-bottom: 10px; font-weight: 800; }
+  .card .big { font-size: 34px; font-weight: 800; line-height:1.15; }
+  .card .sub { font-size: 12px; color:#8a8590; margin-top:5px; }
   .full { grid-column: 1 / -1; }
   .bar { height: 10px; border-radius: 999px; background: #ffe3ec; overflow:hidden; margin-top: 10px; }
-  .bar > div { height: 100%; border-radius: 999px;
+  .bar > div { height:100%; border-radius:999px;
                background: linear-gradient(90deg, var(--pink), var(--teal)); }
-  .emotions { display:flex; align-items:flex-end; gap:6px; height:90px; margin-top:10px; }
-  .emotions .col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .emotions .col .h { width:100%; border-radius:6px 6px 0 0;
-                      background: linear-gradient(180deg, var(--teal), var(--pink)); }
-  .emotions .col span { font-size: 10px; color: #8a8590; }
+
+  /* Calendrier */
+  .cal { width:100%; border-collapse: separate; border-spacing: 4px; }
+  .cal th { font-size: 10px; color:#b06a86; padding-bottom: 4px; }
+  .cal td { text-align:center; font-size: 13px; font-weight: 700; }
+  .cal td .d {
+    display:flex; align-items:center; justify-content:center; height: 44px;
+    border-radius: 10px; background: #faf0f4; color:#b9a3ad; cursor: default;
+    touch-action: manipulation;
+  }
+  .cal td .d.m1 { background:#ff5d6c; color:#fff; }
+  .cal td .d.m2 { background:#ffa05c; color:#fff; }
+  .cal td .d.m3 { background:#f7d154; color:#7a6420; }
+  .cal td .d.m4 { background:#9be89b; color:#1e6b1e; }
+  .cal td .d.m5 { background:#2ecc71; color:#fff; }
+  .cal td .d.today { outline: 2px solid var(--pink); outline-offset: 1px; }
+  .cal td .d.blank { background:transparent; }
+
   .list { list-style:none; }
-  .list li { padding: 9px 0; border-bottom: 1px solid #f6e3ea; font-size: 14px;
-             display:flex; justify-content:space-between; gap:10px; }
+  .list li { padding: 8px 0; border-bottom: 1px solid #f6e3ea; font-size: 14px;
+             display:flex; justify-content:space-between; gap:10px; align-items:center; }
   .list li:last-child { border-bottom:none; }
   .list .time { color:#8a8590; font-size: 12px; white-space:nowrap; }
+  .meals { display:flex; flex-wrap:wrap; gap:8px; }
+  .meal {
+    background:var(--soft); border:1px solid var(--line); border-radius: 12px;
+    padding: 8px 12px; font-size: 20px; display:flex; align-items:center; gap:8px;
+  }
+  .meal .t { font-size: 10px; color:#8a8590; }
   .chip { display:inline-block; padding:3px 10px; border-radius:999px;
           font-size:11px; font-weight:700; }
   .chip.on { background:#e6faf7; color:#1a9e90; }
   .chip.off { background:#fde8ee; color:#c44a74; }
-  .lock { text-align:center; padding: 18px; color:#8a8590; font-size:12.5px;
+  .lock { text-align:center; padding: 14px; color:#8a8590; font-size:12px;
           background:#fff; border-radius:18px; border:1px dashed #e5c9d5; }
   footer { text-align:center; font-size:11px; color:#b9b2bc; margin-top: 24px; }
+
+  /* Tamagotchi */
+  .tama { text-align:center; }
+  .tama .face { font-size: 76px; display:inline-block; }
+  .tama .status { font-size: 13px; color:#8a8590; margin-top:4px; }
+  .gauges { display:grid; gap:10px; margin-top: 14px; }
+  .gauge .lab { display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px; }
+  .gauge .lab span:last-child { color:#8a8590; }
+  .levels { display:flex; gap:8px; align-items:center; margin-top:12px;
+            justify-content:center; font-size:13px; font-weight:700; }
+  .xpbar { height:8px; border-radius:999px; background:#ffe3ec; overflow:hidden; margin-top:6px; }
+  .xpbar > div { height:100%; background:linear-gradient(90deg,#f9d423,#ff6b9d); }
 </style>
 </head>
 <body>
-<header>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login">
   <span class="pig">🐷</span>
-  <h1>ระบบหัวใจพ่อหมู</h1>
-  <p>Le système Papa Pig — cerveau, émotions et automatismes, en direct</p>
-  <div class="badge"><span class="dot"></span>ออนไลน์ — en ligne</div>
+  <h1 data-i18n="login_title">Papapig</h1>
+  <p data-i18n="login_sub">ป้อนรหัสผ่านเพื่อเข้า</p>
+  <form id="login-form">
+    <input type="password" id="pwd" placeholder="password" autocomplete="off">
+    <button type="submit" data-i18n="login_btn">เข้า</button>
+  </form>
+  <div class="err" id="login-err"></div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app" class="hidden">
+<header>
+  <div class="top">
+    <span class="logo">🐷</span>
+    <h1 data-i18n="app_title">Papapig — ระบบใจ</h1>
+    <div class="actions">
+      <button class="btn" id="lang-btn">EN</button>
+      <button class="btn" id="logout-btn">⎋</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" id="tab-joy" data-i18n="tab_joy">👧 ชีวิตจอย</button>
+    <button class="tab" id="tab-papapig" data-i18n="tab_papapig">🐷 ชีวิตพ่อหมู</button>
+  </div>
 </header>
 
 <main>
-  <div class="grid">
-
-    <!-- ÉTAT DU CŒUR -->
-    <div class="card">
-      <h3>💓 สภาพหัวใจ — État du cœur</h3>
-      <div class="big" id="mood">-</div>
-      <div class="sub" id="mood-sub">analyse en cours…</div>
-      <div class="bar"><div id="mood-bar" style="width:50%"></div></div>
+  <!-- ── ONGLET JOY ── -->
+  <section id="view-joy">
+    <div class="grid">
+      <div class="card">
+        <h3 data-i18n="joy_mood_today">😊 อารมณ์วันนี้</h3>
+        <div class="big" id="j-mood-today">—</div>
+        <div class="sub" id="j-mood-note"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="joy_energy">⚡ พลังงาน</h3>
+        <div class="big" id="j-energy">—</div>
+        <div class="bar"><div id="j-energy-bar" style="width:50%"></div></div>
+      </div>
+      <div class="card full">
+        <h3 data-i18n="joy_cal">📅 ปฏิทินอารมณ์ — Calendrier d'humeur</h3>
+        <table class="cal" id="j-cal"></table>
+      </div>
+      <div class="card full">
+        <h3 data-i18n="joy_meals">🍜 กินอะไรมาบ้าง — Repas détectés</h3>
+        <div class="meals" id="j-meals"></div>
+      </div>
+      <div class="card full">
+        <h3 data-i18n="joy_goal">🎯 เป้าหมาย — Goal</h3>
+        <div class="big" style="font-size:22px" id="j-goal">—</div>
+      </div>
     </div>
+  </section>
 
-    <!-- ÉNERGIE -->
-    <div class="card">
-      <h3>⚡ พลังงาน — Énergie (tamagotchi)</h3>
-      <div class="big" id="energy">-</div>
-      <div class="sub" id="energy-sub">-</div>
-      <div class="bar"><div id="energy-bar" style="width:50%"></div></div>
+  <!-- ── ONGLET PAPAPIG ── -->
+  <section id="view-papapig" class="hidden">
+    <div class="grid">
+      <div class="card full tama">
+        <div class="face" id="p-face">🐷</div>
+        <div class="status" id="p-status">—</div>
+        <div class="gauges">
+          <div class="gauge"><div class="lab"><span data-i18n="p_energy">⚡ พลังงาน</span><span id="p-energy">85</span></div>
+            <div class="bar"><div id="p-energy-bar" style="width:85%"></div></div></div>
+          <div class="gauge"><div class="lab"><span data-i18n="p_hunger">🍗 ความหิว</span><span id="p-hunger">40</span></div>
+            <div class="bar"><div id="p-hunger-bar" style="width:40%"></div></div></div>
+          <div class="gauge"><div class="lab"><span data-i18n="p_sleep">😴 การนอน</span><span id="p-sleep">60</span></div>
+            <div class="bar"><div id="p-sleep-bar" style="width:60%"></div></div></div>
+        </div>
+        <div class="levels">
+          <span id="p-level">Niv. 2</span>
+          <span>·</span>
+          <span id="p-xp">XP 120</span>
+        </div>
+        <div class="xpbar"><div id="p-xp-bar" style="width:20%"></div></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="p_persona">🎭 บุคลิก — Persona</h3>
+        <div class="big" style="font-size:26px">🐷 Papa Pig</div>
+        <div class="sub" data-i18n="p_persona_sub">พ่อหมู — défaut</div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="p_emotion">💓 อารมณ์ — Émotion</h3>
+        <div class="big" id="p-emotion">—</div>
+        <div class="sub" id="p-valence">valence +0.30</div>
+      </div>
+      <div class="card full">
+        <h3 data-i18n="p_last_meal">🍽️ มื้อสุดท้าย — Dernier repas</h3>
+        <div class="big" id="p-last-meal">—</div>
+        <div class="sub" id="p-last-meal-at"></div>
+      </div>
+      <div class="card full">
+        <h3 data-i18n="p_crons">⏰ ระบบอัตโนมัติ — Automatismes</h3>
+        <ul class="list" id="p-crons"></ul>
+      </div>
+      <div class="card full">
+        <h3 data-i18n="p_activity">📍 กิจกรรม — Activité récente</h3>
+        <ul class="list" id="p-activity"></ul>
+      </div>
+      <div class="card full lock" data-i18n="lock">🔐 ข้อความทั้งหมดถูกเข้ารหัส (AES-256) — Toutes les conversations sont chiffrées (AES-256).</div>
     </div>
-
-    <!-- PERSONNA -->
-    <div class="card">
-      <h3>🎭 บุคลิก — Persona actif</h3>
-      <div class="big" id="persona">-</div>
-      <div class="sub" id="persona-sub">-</div>
-    </div>
-
-    <!-- DERNIER REPAS -->
-    <div class="card">
-      <h3>🍜 มื้อสุดท้าย — Dernier repas</h3>
-      <div class="big" id="meal">-</div>
-      <div class="sub" id="meal-sub">quand Joy mange, Papapig mange</div>
-    </div>
-
-    <!-- ÉMOTIONS 7 JOURS -->
-    <div class="card full">
-      <h3>📊 อารมณ์ 7 วัน — Émotions des 7 derniers jours</h3>
-      <div class="emotions" id="chart"></div>
-    </div>
-
-    <!-- AUTOMATISMES -->
-    <div class="card full">
-      <h3>⏰ ระบบอัตโนมัติ — Automatismes (crons)</h3>
-      <ul class="list" id="crons"></ul>
-    </div>
-
-    <!-- ACTIVITÉ RÉCENTE -->
-    <div class="card full">
-      <h3>📍 กิจกรรม — Activité récente</h3>
-      <ul class="list" id="activity"><li>chargement…</li></ul>
-    </div>
-
-    <!-- SÉCURITÉ -->
-    <div class="card full lock">
-      🔐 ข้อความทั้งหมดถูกเข้ารหัส — Toutes les conversations sont chiffrées (AES-256).
-      Personne ne peut les lire — même pas moi. 💕
-    </div>
-
-  </div>
-  <footer>Papapig Intelligence System · LM Studio local · zéro donnée partagée hors de ce dashboard</footer>
+  </section>
+  <footer data-i18n="footer">Papapig Intelligence System · LM Studio local · zéro donnée partagée hors de ce dashboard</footer>
 </main>
+</div>
 
 <script>
-const STATE_URL = "data/state.json";
-let last = null;
+/* ═════════ i18n : thaï par défaut + anglais ═════════ */
+const TR = {
+  th: {
+    login_title: "Papapig 🐷", login_sub: "ป้อนรหัสผ่านเพื่อเข้า", login_btn: "เข้า",
+    app_title: "Papapig — ระบบใจ", tab_joy: "👧 ชีวิตจอย", tab_papapig: "🐷 ชีวิตพ่อหมู",
+    joy_mood_today: "😊 อารมณ์วันนี้", joy_energy: "⚡ พลังงาน", joy_cal: "📅 ปฏิทินอารมณ์",
+    joy_meals: "🍜 กินอะไรมาบ้าง", joy_goal: "🎯 เป้าหมาย",
+    p_energy: "⚡ พลังงาน", p_hunger: "🍗 ความหิว", p_sleep: "😴 การนอน",
+    p_persona: "🎭 บุคลิก", p_persona_sub: "พ่อหมู — ค่าเริ่มต้น",
+    p_emotion: "💓 อารมณ์", p_last_meal: "🍽️ มื้อสุดท้าย",
+    p_crons: "⏰ ระบบอัตโนมัติ", p_activity: "📍 กิจกรรม",
+    lock: "🔐 ข้อความทั้งหมดถูกเข้ารหัส (AES-256)",
+    footer: "Papapig Intelligence System · ใช้ LM Studio ในเครื่อง · ไม่มีการแชร์ข้อมูลส่วนตัว",
+    no_data: "ยังไม่มีข้อมูล — เริ่มบันทึกคืนนี้ 📔", no_meal: "ยังไม่มีข้อมูลมื้ออาหาร",
+    logout: "ออกจากระบบ",
+  },
+  en: {
+    login_title: "Papapig 🐷", login_sub: "Enter password", login_btn: "Enter",
+    app_title: "Papapig — Heart System", tab_joy: "👧 Joy's Life", tab_papapig: "🐷 Papapig's Life",
+    joy_mood_today: "😊 Today's Mood", joy_energy: "⚡ Energy", joy_cal: "📅 Mood Calendar",
+    joy_meals: "🍜 Detected Meals", joy_goal: "🎯 Goal",
+    p_energy: "⚡ Energy", p_hunger: "🍗 Hunger", p_sleep: "😴 Sleep",
+    p_persona: "🎭 Persona", p_persona_sub: "Papa Pig — default",
+    p_emotion: "💓 Emotion", p_last_meal: "🍽️ Last Meal",
+    p_crons: "⏰ Automations", p_activity: "📍 Recent Activity",
+    lock: "🔐 All conversations are encrypted (AES-256)",
+    footer: "Papapig Intelligence System · Local LM Studio · no private data shared",
+    no_data: "no data yet — journal starts tonight 📔", no_meal: "no meal data yet",
+    logout: "Log out",
+  }
+};
+let LANG = "th";
+const MOODS = {
+  th: {1:"แย่มาก 😭", 2:"ไม่ดี 😟", 3:"เฉยๆ 😐", 4:"ดี 🙂", 5:"สุดยอด 😍"},
+  en: {1:"awful 😭", 2:"bad 😟", 3:"ok 😐", 4:"good 🙂", 5:"amazing 😍"}
+};
+const EMOMAP = {
+  th: {joie:"ดีใจ 😄", fatigue:"เหนื่อย 😩", stress:"เครียด 😮‍💨", tristesse:"เศร้า 😢",
+       amour:"รัก 💕", faim:"หิว 🍜", neutre:"เฉยๆ 😐", amusement:"สนุก 🤣",
+       somnolence:"ง่วง 😴", nostalgie:"คิดถึง 💭", colère:"โมโห 😤", peur:"กลัว 😨",
+       épuisement:"ไม่ไหว 😵", anxiété:"กังวล 😰"},
+  en: {joie:"joy 😄", fatigue:"tired 😩", stress:"stressed 😮‍💨", tristesse:"sad 😢",
+       amour:"love 💕", faim:"hungry 🍜", neutre:"neutral 😐", amusement:"fun 🤣",
+       somnolence:"sleepy 😴", nostalgie:"miss you 💭", colère:"angry 😤", peur:"scared 😨",
+       épuisement:"drained 😵", anxiété:"anxious 😰"}
+};
 
-function init() {
-  fetch(STATE_URL + "?cb=" + Date.now())
-    .then(r => r.json())
-    .then(s => { last = s; render(s); })
-    .catch(() => {
-      document.getElementById("mood").textContent = "…";
-      setTimeout(init, 10000);
-    });
+/* ═════════ État ═════════ */
+let S = null;
+
+function t(key) { return TR[LANG][key] || key; }
+function applyLang() {
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  document.getElementById("lang-btn").textContent = LANG === "th" ? "EN" : "TH";
+  document.title = t("app_title");
 }
+
+/* ═════════ Login ═════════ */
+const PASSWORD = "smoothie";
+function tryLogin() {
+  const v = document.getElementById("pwd").value.trim().toLowerCase();
+  if (v === PASSWORD) {
+    sessionStorage.setItem("pp_auth", "1");
+    showApp();
+  } else {
+    document.getElementById("login-err").textContent = LANG === "th" ? "รหัสผิด ❌" : "wrong password ❌";
+  }
+}
+document.getElementById("login-form").addEventListener("submit", e => { e.preventDefault(); tryLogin(); });
+document.getElementById("logout-btn").addEventListener("click", () => {
+  sessionStorage.removeItem("pp_auth"); location.reload();
+});
+function showApp() {
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  init();
+}
+if (sessionStorage.getItem("pp_auth") === "1") showApp();
+
+/* ═════════ Tabs ═════════ */
+document.getElementById("tab-joy").addEventListener("click", () => switchTab("joy"));
+document.getElementById("tab-papapig").addEventListener("click", () => switchTab("papapig"));
+function switchTab(which) {
+  document.getElementById("view-joy").classList.toggle("hidden", which !== "joy");
+  document.getElementById("view-papapig").classList.toggle("hidden", which !== "papapig");
+  document.getElementById("tab-joy").classList.toggle("active", which === "joy");
+  document.getElementById("tab-papapig").classList.toggle("active", which === "papapig");
+}
+
+/* ═════════ Lang switch ═════════ */
+document.getElementById("lang-btn").addEventListener("click", () => {
+  LANG = LANG === "th" ? "en" : "th";
+  applyLang(); if (S) render(S);
+});
+
+/* ═════════ Data ═════════ */
+function init() {
+  applyLang();
+  fetch("data/state.json?cb=" + Date.now())
+    .then(r => r.json()).then(s => { S = s; render(s); })
+    .catch(() => setTimeout(init, 15000));
+}
+setInterval(() => { if (S) init(); }, 60000);
 
 function render(s) {
-  // Mood
-  const moods = { "joie":"ดีใจ 😄", "fatigue":"เหนื่อย 😩", "stress":"เครียด 😮💨",
-    "tristesse":"เศร้า 😢", "amour":"รัก 💕", "faim":"หิว 🍜", "neutre":"เฉยๆ 😐",
-    "amusement":"สนุก 🤣", "somnolence":"ง่วง 😴", "nostalgie":"คิดถึง 💭",
-    "colère":"โมโห 😤", "peur":"กลัว 😨", "épuisement":"ไม่ไหว 😵", "anxiété":"กังวล 😰" };
-  const emo = s.mood || "neutre";
-  document.getElementById("mood").textContent = moods[emo] || emo;
-  const v = (s.valence + 1) / 2 * 100;
-  document.getElementById("mood-bar").style.width = Math.max(8, v) + "%";
-  document.getElementById("mood-sub").textContent =
-    "valence " + (s.valence >= 0 ? "+" : "") + s.valence.toFixed(2) + " · " + s.emotion;
+  const J = s.joy || {}, P = s.papapig || {};
 
-  // Énergie
-  document.getElementById("energy").textContent = (s.energy ?? 80) + "%";
-  document.getElementById("energy-bar").style.width = (s.energy ?? 80) + "%";
-  document.getElementById("energy-sub").textContent = "dernier reset : " + (s.energy_reset || "matin Bangkok");
+  /* Joy — mood du jour */
+  const m = J.mood_today;
+  document.getElementById("j-mood-today").textContent = m ? (MOODS[LANG][m] || m) : "—";
+  document.getElementById("j-mood-note").textContent = J.mood_note || "";
 
-  // Persona
-  const p = s.persona === "papapig" ? "🐷 Papa Pig" : "🟣 Chowder";
-  document.getElementById("persona").textContent = p;
-  document.getElementById("persona-sub").textContent = s.persona_note || "choix matinal chaque jour";
+  /* Joy — énergie */
+  document.getElementById("j-energy").textContent = (J.energy ?? 70) + "%";
+  document.getElementById("j-energy-bar").style.width = (J.energy ?? 70) + "%";
 
-  // Repas
-  document.getElementById("meal").textContent = s.last_meal_emoji || "—";
-  document.getElementById("meal-sub").textContent = s.last_meal_at || "pas encore aujourd'hui";
+  /* Joy — calendrier */
+  renderCal(J.moods || []);
 
-  // Chart 7 jours
-  const days = s.emotions_7d || [];
-  const chart = document.getElementById("chart");
-  chart.innerHTML = "";
-  if (!days.length) { chart.innerHTML = "<p style='font-size:12px;color:#8a8590'>pas de données — le journal commence ce soir 📔</p>"; }
-  days.forEach(d => {
-    const col = document.createElement("div"); col.className = "col";
-    const h = document.createElement("div"); h.className = "h";
-    h.style.height = Math.max(6, (d.v + 1) / 2 * 76) + "px";
-    h.title = d.date + " — " + d.emotion;
-    const span = document.createElement("span"); span.textContent = d.date.slice(5);
-    col.appendChild(h); col.appendChild(span); chart.appendChild(col);
+  /* Joy — repas */
+  const meals = J.meals || [];
+  const mWrap = document.getElementById("j-meals");
+  mWrap.innerHTML = "";
+  if (!meals.length) mWrap.innerHTML = "<span style='color:#8a8590;font-size:13px'>" + t("no_meal") + "</span>";
+  meals.forEach(me => {
+    const el = document.createElement("div"); el.className = "meal";
+    el.innerHTML = "<span>" + me.emoji + "</span><span class='t'>" + me.date.slice(5) + " " + me.at + "</span>";
+    mWrap.appendChild(el);
   });
 
-  // Crons
-  const crons = document.getElementById("crons");
-  crons.innerHTML = "";
-  (s.crons || []).forEach(c => {
+  /* Joy — goal */
+  document.getElementById("j-goal").textContent = J.goal || "—";
+
+  /* Papapig — tamagotchi */
+  document.getElementById("p-energy").textContent = P.energy ?? 85;
+  document.getElementById("p-energy-bar").style.width = (P.energy ?? 85) + "%";
+  document.getElementById("p-hunger").textContent = P.hunger ?? 40;
+  document.getElementById("p-hunger-bar").style.width = (P.hunger ?? 40) + "%";
+  document.getElementById("p-sleep").textContent = P.sleep ?? 60;
+  document.getElementById("p-sleep-bar").style.width = (P.sleep ?? 60) + "%";
+  document.getElementById("p-level").textContent = (LANG === "th" ? "เลเวล " : "Niv. ") + (P.level ?? 2);
+  document.getElementById("p-xp").textContent = "XP " + (P.xp ?? 120);
+  document.getElementById("p-xp-bar").style.width = ((P.xp ?? 120) % 100) + "%";
+  document.getElementById("p-face").textContent = "🐷";
+  document.getElementById("p-status").textContent = P.emotion ? (EMOMAP[LANG][P.emotion] || P.emotion) : "—";
+  document.getElementById("p-emotion").textContent = P.emotion ? (EMOMAP[LANG][P.emotion] || P.emotion) : "—";
+  document.getElementById("p-valence").textContent = "valence " + (P.valence >= 0 ? "+" : "") + (P.valence ?? 0).toFixed(2);
+  document.getElementById("p-last-meal").textContent = P.last_meal_emoji || "—";
+  document.getElementById("p-last-meal-at").textContent = P.last_meal_at || "";
+
+  /* Papapig — crons */
+  const cWrap = document.getElementById("p-crons");
+  cWrap.innerHTML = "";
+  (P.crons || []).forEach(c => {
     const li = document.createElement("li");
-    li.innerHTML = "<span>" + c.name + "</span>" +
-      "<span class='chip " + (c.status === "active" ? "on" : "off") + "'>" +
-      (c.status === "active" ? "✓ actif" : "⏸ pause") + "</span>";
-    crons.appendChild(li);
+    li.innerHTML = "<span>" + c.name + "</span><span class='chip " + (c.status === "active" ? "on" : "off") + "'>" +
+      (c.status === "active" ? "✓" : "⏸") + "</span>";
+    cWrap.appendChild(li);
   });
 
-  // Activité
-  const act = document.getElementById("activity");
-  act.innerHTML = "";
-  (s.activity || [{ t: "système prêt", d: "maintenant" }]).forEach(a => {
+  /* Papapig — activité */
+  const aWrap = document.getElementById("p-activity");
+  aWrap.innerHTML = "";
+  (P.activity || []).forEach(a => {
     const li = document.createElement("li");
     li.innerHTML = "<span>" + a.t + "</span><span class='time'>" + a.d + "</span>";
-    act.appendChild(li);
+    aWrap.appendChild(li);
   });
 }
 
-setInterval(init, 60000);
-init();
+/* ═════════ Calendrier mensuel ═════════ */
+function renderCal(moods) {
+  const byDate = {};
+  moods.forEach(m => byDate[m.date] = m.mood);
+  const now = new Date();
+  const y = now.getFullYear(), mo = now.getMonth();
+  const first = new Date(y, mo, 1);
+  const startDow = (first.getDay() + 6) % 7; // lundi = 0
+  const daysInMonth = new Date(y, mo + 1, 0).getDate();
+  const pad = d => String(d).padStart(2, "0");
+  const todayStr = `${y}-${pad(mo + 1)}-${pad(now.getDate())}`;
+
+  const labels = LANG === "th" ? ["จ","อ","พ","พฤ","ศ","ส","อา"] : ["M","T","W","T","F","S","S"];
+  let html = "<tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr><tr>";
+  for (let i = 0; i < startDow; i++) html += "<td><div class='d blank'></div></td>";
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${y}-${pad(mo + 1)}-${pad(d)}`;
+    const mood = byDate[ds];
+    const cls = mood ? "m" + mood : "blank";
+    const isToday = ds === todayStr ? " today" : "";
+    html += "<td><div class='d " + cls + isToday + "'>" + d + "</div></td>";
+    if ((startDow + d) % 7 === 0) html += "</tr><tr>";
+  }
+  html += "</tr>";
+  document.getElementById("j-cal").innerHTML = html;
+}
 </script>
 </body>
 </html>

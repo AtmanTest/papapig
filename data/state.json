@@ -1,49 +1,60 @@
 {
-  "mood": "neutre",
-  "valence": 0.0,
-  "activation": 0.5,
-  "emotion": "neutre",
-  "energy": 80,
-  "persona": "chowder",
-  "persona_note": "choix matinal chaque jour",
-  "last_meal_emoji": null,
-  "last_meal_at": null,
-  "emotions_7d": [],
-  "crons": [
-    {
-      "name": "papapig-news",
-      "status": "active"
-    },
-    {
-      "name": "papapig-emotions-update",
-      "status": "active"
-    },
-    {
-      "name": "papapig-bedtime-sticker",
-      "status": "active"
-    },
-    {
-      "name": "papapig-morning-sticker",
-      "status": "active"
-    },
-    {
-      "name": "papapig-journal",
-      "status": "active"
-    },
-    {
-      "name": "papapig-daily-message",
-      "status": "active"
-    },
-    {
-      "name": "papapig-bedtime-reminder",
-      "status": "active"
-    },
-    {
-      "name": "papapig-weekly-review",
-      "status": "active"
-    }
-  ],
-  "activity": [],
-  "generated_at": "2026-08-07 21:19 Bangkok",
-  "energy_reset": "matin Bangkok (cron 3h UTC)"
+  "generated_at": "2026-08-07 21:29 Bangkok",
+  "joy": {
+    "mood_today": null,
+    "mood_note": "",
+    "moods": [],
+    "meals": [],
+    "energy": 70,
+    "goal": "",
+    "streak": 0
+  },
+  "papapig": {
+    "persona": "papapig",
+    "energy": 85,
+    "hunger": 40,
+    "sleep": 60,
+    "xp": 120,
+    "level": 2,
+    "valence": 0.3,
+    "activation": 0.5,
+    "emotion": "joie",
+    "last_meal_emoji": null,
+    "last_meal_at": null,
+    "crons": [
+      {
+        "name": "papapig-news",
+        "status": "active"
+      },
+      {
+        "name": "papapig-emotions-update",
+        "status": "active"
+      },
+      {
+        "name": "papapig-bedtime-sticker",
+        "status": "active"
+      },
+      {
+        "name": "papapig-morning-sticker",
+        "status": "active"
+      },
+      {
+        "name": "papapig-journal",
+        "status": "active"
+      },
+      {
+        "name": "papapig-daily-message",
+        "status": "active"
+      },
+      {
+        "name": "papapig-bedtime-reminder",
+        "status": "active"
+      },
+      {
+        "name": "papapig-weekly-review",
+        "status": "active"
+      }
+    ],
+    "activity": []
+  }
 }
