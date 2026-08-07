@@ -107,6 +107,7 @@
     padding: 8px 12px; font-size: 20px; display:flex; align-items:center; gap:8px;
   }
   .meal .t { font-size: 10px; color:#8a8590; }
+  .meal b { font-size: 13px; font-weight: 700; }
   .chip { display:inline-block; padding:3px 10px; border-radius:999px;
           font-size:11px; font-weight:700; }
   .chip.on { background:#e6faf7; color:#1a9e90; }
@@ -366,7 +367,9 @@ function render(s) {
   if (!meals.length) mWrap.innerHTML = "<span style='color:#8a8590;font-size:13px'>" + t("no_meal") + "</span>";
   meals.forEach(me => {
     const el = document.createElement("div"); el.className = "meal";
-    el.innerHTML = "<span>" + me.emoji + "</span><span class='t'>" + me.date.slice(5) + " " + me.at + "</span>";
+    el.innerHTML = "<span>" + me.emoji + "</span>" +
+      (me.word ? "<b>" + me.word + "</b>" : "") +
+      "<span class='t'>" + me.date.slice(5) + " " + me.at + "</span>";
     mWrap.appendChild(el);
   });
 
