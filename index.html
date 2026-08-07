@@ -77,6 +77,12 @@
   }
   .tab.active { background: var(--cream); color: var(--dark); }
   main { max-width: 640px; margin: 0 auto; padding: 18px 14px 60px; }
+  .joy-hero { display:flex; justify-content:center; margin: 0 0 16px; }
+  .joy-hero img {
+    width: 100%; max-width: 460px; display:block;
+    border-radius: 0 0 46px 46px / 0 0 58px 58px;
+    box-shadow: 0 12px 30px rgba(255,107,157,.30);
+  }
   .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
   @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
   .card {
@@ -207,6 +213,7 @@
 <main>
   <!-- ── ONGLET JOY ── -->
   <section id="view-joy">
+    <div class="joy-hero"><img src="images/joy-oval.png" alt="Joy 💕"></div>
     <div class="grid">
       <div class="card">
         <h3 data-i18n="joy_mood_today">😊 อารมณ์วันนี้</h3>
