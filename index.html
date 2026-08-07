@@ -98,7 +98,7 @@
                background: linear-gradient(90deg, var(--pink), var(--teal)); }
 
   /* Calendrier */
-  .cal { width:100%; border-collapse: separate; border-spacing: 4px; }
+  .cal { width:100%; border-collapse: separate; border-spacing: 4px; table-layout: fixed; }
   .cal th { font-size: 10px; color:#b06a86; padding-bottom: 4px; }
   .cal-head { text-align:center; font-weight:800; font-size:14px; color:#c44a74; margin-bottom:8px; }
   .cal td { text-align:center; font-size: 13px; font-weight: 700; }
@@ -500,7 +500,7 @@ function renderCal(moods) {
        "July","August","September","October","November","December"];
   const hol = d => (S.holidays || {})[d] || null;
   let html = "<div class='cal-head'>" + months[mo] + " " + y + "</div>" +
-             "<table class='cal'><tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr><tr>";
+             "<table class='cal'><tbody><tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr>";
   for (let i = 0; i < startDow; i++) html += "<td><div class='d blank'></div></td>";
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = `${y}-${pad(mo + 1)}-${pad(d)}`;
@@ -520,7 +520,7 @@ function renderCal(moods) {
     html += "<td><div class='d " + cls + "'" + click + ">" + d + wico + holDot + "</div></td>";
     if ((startDow + d) % 7 === 0) html += "</tr><tr>";
   }
-  html += "</tr></table>";
+  html += "</tr></tbody></table>";
   document.getElementById("j-cal").innerHTML = html;
 }
 
