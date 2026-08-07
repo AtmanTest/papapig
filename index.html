@@ -23,9 +23,23 @@
   #login {
     min-height: 100vh; display:flex; flex-direction:column; align-items:center;
     justify-content:center; gap: 20px;
-    background: linear-gradient(135deg, var(--pink), var(--teal));
-    padding: 30px;
+    background: linear-gradient(135deg, rgba(255,143,182,.62), rgba(94,217,200,.62)), url('images/peppa-family.jpg') center/cover no-repeat;
+    padding: 30px; position:relative; overflow:hidden;
   }
+  .login-fade { position:absolute; inset:0; background:rgba(255,255,255,.12);
+                backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px);
+                z-index:0; pointer-events:none; }
+  #music-btn { position:absolute; top:14px; right:14px; z-index:2; width:46px; height:46px;
+    border-radius:50%; border:none; font-size:20px; cursor:pointer;
+    background:rgba(255,255,255,.38); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 14px rgba(0,0,0,.15); transition: transform .15s; }
+  #music-btn:active { transform: scale(.9); }
+  .pig-uke-wrap { position:relative; z-index:1; animation: bounce 2.2s infinite; }
+  .pig-uke { width:min(38vw, 190px); display:block;
+             transform: translate(var(--mx,0px), var(--my,0px));
+             -webkit-filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
+             filter: drop-shadow(0 6px 18px rgba(0,0,0,.25)); }
+  #login > *:not(.login-fade) { position:relative; z-index:1; }
   #login .pig { font-size: 84px; animation: bounce 2.2s infinite; }
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
   #login h1 { color:#fff; font-size: 26px; font-weight: 800; }
@@ -77,11 +91,8 @@
   }
   .tab.active { background: var(--cream); color: var(--dark); }
   main { max-width: 640px; margin: 0 auto; padding: 18px 14px 60px; }
-  .joy-hero { display:flex; justify-content:center; margin: 0 0 16px; }
-  .joy-hero img {
-    width: 100%; max-width: 300px; display:block;
-    box-shadow: 0 12px 30px rgba(255,107,157,.30);
-  }
+  .joy-hero { text-align:center; margin: 0 0 16px; }
+  .joy-hero img { width:100%; max-width:300px; display:inline-block; }
   .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
   @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
   .card {
@@ -101,13 +112,16 @@
   .cal { width:100%; border-collapse: separate; border-spacing: 4px; table-layout: fixed; }
   .cal th { font-size: 10px; color:#b06a86; padding-bottom: 4px; }
   .cal-head { text-align:center; font-weight:800; font-size:14px; color:#c44a74; margin-bottom:8px; }
+  .cal-row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .cal-year { font-weight:800; font-size:12px; color:#1d3f73; letter-spacing:.3px; white-space:nowrap; }
   .cal td { text-align:center; font-size: 13px; font-weight: 700; }
   .cal td .d {
     display:flex; flex-direction:column; align-items:center; justify-content:center; height: 46px;
-    border-radius: 10px; background: #faf0f4; color:#b9a3ad; cursor: default;
-    touch-action: manipulation; line-height: 1.1;
+    border-radius: 10px; background: #fbeadd; color:#a8886e;
   }
-  .cal td .d.clickable { background: #ffe9c9; color:#a86a2b; cursor:pointer; }
+  .cal td .d.sun { background:#d9f2e6; color:#2e7d5b; }
+  .cal td .d .sunb { font-size: 8px; line-height: 1; margin-top: 1px; font-weight: 700; letter-spacing:.2px; }
+  .cal td .d.clickable { cursor:pointer; }
   .cal td .d.clickable:active { transform: scale(.93); }
   .cal td .d.m1 { background:#ff5d6c; color:#fff; }
   .cal td .d.m2 { background:#ffa05c; color:#fff; }
@@ -186,7 +200,10 @@
 
 <!-- ═══ LOGIN ═══ -->
 <div id="login">
-  <span class="pig">🐷</span>
+  <div class="login-fade"></div>
+  <audio id="login-music" src="audio/login-music.mp3" loop preload="none"></audio>
+  <button id="music-btn" aria-label="Music">🎵</button>
+  <div class="pig-uke-wrap"><img class="pig-uke" src="images/peppa-uke.png" alt=""></div>
   <h1 data-i18n="login_title">Papapig</h1>
   <p data-i18n="login_sub">ป้อนรหัสผ่านเพื่อเข้า</p>
   <form id="login-form">
@@ -219,7 +236,7 @@
 <main>
   <!-- ── ONGLET JOY ── -->
   <section id="view-joy">
-    <div class="joy-hero"><img src="images/joy-oval.png" alt="Joy 💕"></div>
+    <div class="joy-hero"><img src="images/joy.jpg" alt="Joy 💕"></div>
     <div class="grid">
       <div class="card">
         <h3 data-i18n="joy_mood_today">😊 อารมณ์วันนี้</h3>
@@ -232,8 +249,8 @@
         <div class="bar"><div id="j-energy-bar" style="width:50%"></div></div>
       </div>
       <div class="card full">
-        <h3 data-i18n="joy_cal">📅 ปฏิทินอารมณ์ — Calendrier d'humeur</h3>
-        <table class="cal" id="j-cal"></table>
+        <div class="cal-row"><h3 data-i18n="joy_cal">📅 ปฏิทินอารมณ์ — Calendrier d'humeur</h3><span id="cal-year" class="cal-year"></span></div>
+        <div id="j-cal"></div>
       </div>
       <div class="card full">
         <h3 data-i18n="joy_meals">🍜 กินอะไรมาบ้าง — Repas détectés</h3>
@@ -283,7 +300,7 @@
         <div class="sub" id="p-last-meal-at"></div>
       </div>
       <div class="card full">
-        <h3 data-i18n="p_crons">⏰ ระบบอัตโนมัติ — Automatismes</h3>
+        <h3 data-i18n="p_crons">I love my job</h3>
         <ul class="list" id="p-crons"></ul>
       </div>
       <div class="card full">
@@ -313,12 +330,12 @@ const TR = {
   th: {
     login_title: "Papapig 🐷", login_sub: "ป้อนรหัสผ่านเพื่อเข้า", login_btn: "เข้า",
     app_title: "Papapig AI — ความฉลาดที่แท้จริง", tab_joy: "👧 ชีวิตจอย", tab_papapig: "🐷 ชีวิตพ่อหมู",
-    joy_mood_today: "😊 อารมณ์วันนี้", joy_energy: "⚡ พลังงาน", joy_cal: "📅 ปฏิทิน — อารมณ์ · อากาศ · อาหาร",
+    joy_mood_today: "😊 อารมณ์วันนี้", joy_energy: "⚡ พลังงาน", joy_cal: "📅 ปฏิทิน — อารมณ์ · อากาศ · อาหาร · วันสำคัญ",
     joy_meals: "🍜 กินอะไรมาบ้าง", joy_goal: "🎯 เป้าหมาย",
     p_energy: "⚡ พลังงาน", p_hunger: "🍗 ความหิว", p_sleep: "😴 การนอน",
     p_persona: "🎭 บุคลิก", p_persona_sub: "พ่อหมู — ค่าเริ่มต้น",
     p_emotion: "💓 อารมณ์", p_last_meal: "🍽️ มื้อสุดท้าย",
-    p_crons: "⏰ ระบบอัตโนมัติ", p_activity: "📍 กิจกรรม",
+    p_crons: "I love my job", p_activity: "📍 กิจกรรม",
     lock: "🔐 ข้อความทั้งหมดถูกเข้ารหัส (AES-256)",
     footer: "Papapig Intelligence System · ใช้ LM Studio ในเครื่อง · ไม่มีการแชร์ข้อมูลส่วนตัว",
     no_data: "ยังไม่มีข้อมูล — เริ่มบันทึกคืนนี้ 📔", no_meal: "ยังไม่มีข้อมูลมื้ออาหาร",
@@ -327,12 +344,12 @@ const TR = {
   en: {
     login_title: "Papapig 🐷", login_sub: "Enter password", login_btn: "Enter",
     app_title: "Papapig AI with Real Intelligence", tab_joy: "👧 Joy's Life", tab_papapig: "🐷 Papapig's Life",
-    joy_mood_today: "😊 Today's Mood", joy_energy: "⚡ Energy", joy_cal: "📅 Calendar — Mood · Weather · Food",
+    joy_mood_today: "😊 Today's Mood", joy_energy: "⚡ Energy", joy_cal: "📅 Calendar — Mood · Weather · Food · Special Events",
     joy_meals: "🍜 Detected Meals", joy_goal: "🎯 Goal",
     p_energy: "⚡ Energy", p_hunger: "🍗 Hunger", p_sleep: "😴 Sleep",
     p_persona: "🎭 Persona", p_persona_sub: "Papa Pig — default",
     p_emotion: "💓 Emotion", p_last_meal: "🍽️ Last Meal",
-    p_crons: "⏰ Automations", p_activity: "📍 Recent Activity",
+    p_crons: "I love my job", p_activity: "📍 Recent Activity",
     lock: "🔐 All conversations are encrypted (AES-256)",
     footer: "Papapig Intelligence System · Local LM Studio · no private data shared",
     no_data: "no data yet — journal starts tonight 📔", no_meal: "no meal data yet",
@@ -371,12 +388,30 @@ function tryLogin() {
   const v = document.getElementById("pwd").value.trim().toLowerCase();
   if (v === PASSWORD) {
     sessionStorage.setItem("pp_auth", "1");
+    _stopMusic();
     showApp();
   } else {
     document.getElementById("login-err").textContent = LANG === "th" ? "รหัสผิด ❌" : "wrong password ❌";
   }
 }
 document.getElementById("login-form").addEventListener("submit", e => { e.preventDefault(); tryLogin(); });
+// Musique de la page de connexion (bouton play/pause, boucle)
+const _music = document.getElementById("login-music");
+const _mbtn = document.getElementById("music-btn");
+let _musicOn = false;
+_mbtn.addEventListener("click", () => {
+  if (_musicOn) { _music.pause(); _mbtn.textContent = "🎵"; }
+  else { _music.play().catch(()=>{}); _mbtn.textContent = "🔊"; }
+  _musicOn = !_musicOn;
+});
+function _stopMusic() { if (_musicOn) { _music.pause(); _music.currentTime = 0; _mbtn.textContent = "🎵"; _musicOn = false; } }
+// Regard de Joy qui suit le curseur (parallax doux)
+window.addEventListener("mousemove", e => {
+  const mx = (e.clientX / window.innerWidth - .5) * 26;
+  const my = (e.clientY / window.innerHeight - .5) * 26;
+  document.documentElement.style.setProperty("--mx", mx.toFixed(1) + "px");
+  document.documentElement.style.setProperty("--my", my.toFixed(1) + "px");
+}, { passive: true });
 document.getElementById("logout-btn").addEventListener("click", () => {
   sessionStorage.removeItem("pp_auth"); location.reload();
 });
@@ -499,8 +534,10 @@ function renderCal(moods) {
     : ["January","February","March","April","May","June",
        "July","August","September","October","November","December"];
   const hol = d => (S.holidays || {})[d] || null;
-  let html = "<div class='cal-head'>" + months[mo] + " " + y + "</div>" +
-             "<table class='cal'><tbody><tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr>";
+  const sunBadge = LANG === "th" ? "วันพักผ่อน 🌿" : "Rest Day 🌿";
+  const yEl = document.getElementById("cal-year");
+  if (yEl) yEl.textContent = months[mo] + " " + y;
+  let html = "<table class='cal'><tbody><tr>" + labels.map(l => "<th>" + l + "</th>").join("") + "</tr>";
   for (let i = 0; i < startDow; i++) html += "<td><div class='d blank'></div></td>";
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = `${y}-${pad(mo + 1)}-${pad(d)}`;
@@ -508,7 +545,8 @@ function renderCal(moods) {
     const w = (S.weather || {})[ds];
     const hasWeather = w && w.tmax !== undefined && w.tmax !== null;
     const hasData = mood || hasWeather;
-    let cls = mood ? "m" + mood : (hasWeather ? "clickable" : "blank");
+    const isSun = new Date(y, mo, d).getDay() === 0;
+    let cls = mood ? "m" + mood : (isSun ? "sun" : "day");
     if (ds === todayStr) cls += " today";
     const click = hasData || hol(ds) ? ` onclick='openDay("${ds}")'` : "";
     let wico = "";
@@ -517,7 +555,8 @@ function renderCal(moods) {
       wico = "<span class='w'>" + rain + "</span>";
     }
     const holDot = hol(ds) ? "<span class='hol'></span>" : "";
-    html += "<td><div class='d " + cls + "'" + click + ">" + d + wico + holDot + "</div></td>";
+    const badge = isSun ? "<span class='sunb'>" + sunBadge + "</span>" : "";
+    html += "<td><div class='d " + cls + "'" + click + ">" + d + badge + wico + holDot + "</div></td>";
     if ((startDow + d) % 7 === 0) html += "</tr><tr>";
   }
   html += "</tr></tbody></table>";
